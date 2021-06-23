@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Youtube Clone</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <h1>
+      Youtube Clone<span
+        ><button class="btn" id="log-out">Log Out</button></span
+      >
+    </h1>
+    <div class="contanier">
+      <button class="btn" id="log-in">Log In</button>
+      <div id="content" class="text-data">
+        <form id="form">
+          <div class="input-field">
+            <input
+              type="text"
+              id="search"
+              placeholder="Search a Youtube profile"
+            />
+            <input
+              type="text"
+              id="search-playlist"
+              placeholder="Paste a Playlist URL"
+            />
+            <input type="submit" value="Get User Data" class="btn-submit" />
+            <br />
+          </div>
+        </form>
+        <main id="main"></main>
+        <form id="form-search">
+          <h1>Topic Wise Search</h1>
+          <input type="text" id="keyword" placeholder="search Youtube" />
+          <input type="submit" value="Search Youtube" class="btn-submit" />
+          <br />
+          <div class="video-youtube">
+            <div class="videos-youtube" id="video-youtube-container"></div>
+          </div>
+        </form>
+      </div>
+      <div class="video-contain">
+        <div class="videos" id="video-container"></div>
+      </div>
+    </div>
+
+    <script src="./script.js"></script>
+    <script
+      async
+      defer
+      src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()"
+    ></script>
+  </body>
+</html>
