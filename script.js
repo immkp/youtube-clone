@@ -1,5 +1,5 @@
 const CLIENT_ID =
-  '741006384425-pp1ad910m3ejo9h1h12jn5p7m8hup7c0.apps.googleusercontent.com'
+  '102167321157-q162260s6mtdblpmkp0e7ui1p3d6u5q3.apps.googleusercontent.com'
 const DISCOVERY_DOCS = [
   'https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest',
 ]
@@ -17,9 +17,9 @@ const videoContainer = document.getElementById('video-container')
 const formSearch = document.getElementById('form-search')
 const keyword = document.getElementById('keyword')
 
-const api_key = 'AIzaSyAEmocbhfLIRrO6bk87bEq1OoGG8KTrsHs'
+const api_key = 'AIzaSyBFplLnVmui-hEA7ZsynY6AgF8Qd3t73wE'
 const defaultChannel = 'tseries'
-
+videoSearchInYoutube()
 formSearch.addEventListener('submit', (e) => {
   let container = document.querySelector('.videos-youtube')
   container.innerHTML = ''
@@ -87,17 +87,21 @@ function getData(channel, url = '') {
   gapi.client.youtube.channels
     .list(requestOptions)
     .then((response) => {
-      console.log(response)
-      console.log(1)
       const details = response.result.items[0]
       const output = `
       <div class="card">
       <ul class="info">
         <li><strong>Title:</strong>${details.snippet.title}</li>
         <li><strong>Published At:</strong>${details.snippet.publishedAt}</li> 
-        <li><strong>Subscribers:</strong>${details.statistics.subscriberCount}</li> 
-        <li><strong>Views:</strong>${details.statistics.viewCount}</li> 
-        <li><strong>Number Of Videos:</strong>${details.statistics.videoCount}</li> 
+        <li><strong>Subscribers:</strong>${numberWithCommas(
+          details.statistics.subscriberCount
+        )}</li> 
+        <li><strong>Views:</strong>${numberWithCommas(
+          details.statistics.viewCount
+        )}</li> 
+        <li><strong>Number Of Videos:</strong>${
+          details.statistics.videoCount
+        }</li> 
         <li id="details">${details.snippet.description}</li>
       </ul>
       <br>
@@ -118,7 +122,6 @@ function getData(channel, url = '') {
 }
 
 function videoPlayList(id) {
-  console.log(id)
   let requestOptions = {
     playlistId: id,
     part: 'snippet,contentDetails',
@@ -148,27 +151,33 @@ function videoPlayList(id) {
 }
 
 function subscriptionList(id) {
-  console.log('hello')
-  console.log(id)
+  let container = document.querySelector('.subscriptonList')
   gapi.client.youtube.subscriptions
     .list({
-      part: ['subscriberSnippet'],
-      maxResults: 10,
-      mine: true,
+      part: ['snippet'],
+      channelId: 'UCkQdOUekz4se4nM7oizkOKw',
+      maxResults: 20,
     })
     .then(
       function (response) {
         // Handle the results here (response.result has the parsed body).
-        console.log('Response', response)
+        const subscriptionList = response.result.items
+        subscriptionList.forEach((item) => {
+          let listItem = `<li>${item.snippet.title}</li>`
+          container.insertAdjacentHTML('beforeend', listItem)
+        })
       },
       function (err) {
         console.error('Execute error', err)
       }
     )
 }
-function videoSearchInYoutube(key, keyword, maxResults) {
+function videoSearchInYoutube(
+  key = api_key,
+  keyword = 'Javascript Tutorials',
+  maxResults = '5'
+) {
   let container = document.querySelector('.videos-youtube')
-
   let output = ''
   fetch(
     `https://www.googleapis.com/youtube/v3/search?key=${key}&type=video&part=snippet&maxResults=${maxResults}&q=${keyword}`,
@@ -188,4 +197,8 @@ function videoSearchInYoutube(key, keyword, maxResults) {
         container.insertAdjacentHTML('beforeend', output)
       })
     })
+}
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
